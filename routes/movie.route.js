@@ -13,7 +13,7 @@ movieRoute.post("/addlist/:id",Authentication,async(req,res)=>{
     const movieId=req.params.id;
     const userid=req.body.userid;
     try{
-        const newMovie=await MylistModel({movie:movieId,user:userid})
+        const newMovie=await new MylistModel({movie:movieId,user:userid})
         await newMovie.save();
         res.status(200).send({msg:"added to list successfully"})
     }catch(err){
