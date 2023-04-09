@@ -6,7 +6,9 @@ const { userRoute } = require("./routes/user.route");
 const app=express()
 require("dotenv").config()
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+    origin: "*"
+}))
 app.use("/movie",movieRoute)  //movie route
 app.use("/user",userRoute)      //user route
 const PORT=process.env.PORT||8081
