@@ -10,10 +10,12 @@ const movieRoute=express.Router()
 //get all series/movie/netflix original data
 
 movieRoute.post("/addlist/:id",Authentication,async(req,res)=>{
-    const movieId=req.params.id;
     const userid=req.body.userid;
+    console.log({userid, movieid: req.params.id});
     try{
-        const newMovie=await new MylistModel({movie:movieId,user:userid})
+        const movieId= new mongoose.Types.ObjectId(req.params.id.trim());
+        console.log({movie:movieId,user:userid});
+        const newMovie = await MylistModel({movie:movieId,user:userid})
         await newMovie.save();
         res.status(200).send({msg:"added to list successfully"})
     }catch(err){
@@ -23,7 +25,6 @@ movieRoute.post("/addlist/:id",Authentication,async(req,res)=>{
 
 
 movieRoute.get("/",async(req,res)=>{
-   
     try{
         const allMovieData=await MovieModel.find()
         res.status(200).send({data:allMovieData})
@@ -56,7 +57,7 @@ movieRoute.get("/list/all",Authentication,async(req,res)=>{
     const userId=req.body.userid;
     console.log(userId)
     try{
-        const allList=await MylistModel.find({user:userId}).populate("movie");
+        const allList=await MylistModel.find({user:userId}).populate(["movie"]);
         res.status(200).send({data:allList})
 
     }catch(err){
@@ -69,7 +70,6 @@ movieRoute.delete("/list/:id",Authentication,async(req,res)=>{
     const userId=req.body.userid
 
     try{
-        const movieTobeDeleted=await MylistModel.findOneAndDelete({user:userId,_id:listId})
         res.status(200).send({msg:"Removed from successfully"})
 
     }catch(err){
